@@ -17,3 +17,6 @@ Important:
 - Products and ad manager data are saved in browser localStorage.
 - Uploaded images are compressed before saving to reduce lag.
 - For real multi-device database and true server-side security, connect Firebase, Supabase, or Netlify Identity later.
+
+
+Update: Homepage now shows only one clean 3:2 product image. Clicking View Details opens product.html with full product description, gallery images, and Buy on Amazon button. Admin supports up to 4 product images.
