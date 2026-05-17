@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | Style & Glow</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body class="admin-body no-autofill">
+  <main class="admin-shell">
+    <section id="loginPanel" class="admin-panel login-panel reveal">
+      <p class="eyebrow">Private access</p>
+      <h1>Admin Login</h1>
+      <p class="soft-note">Enter your admin details and CAPTCHA to open the product and ad manager.</p>
+
+      <form id="loginForm" class="admin-form secure-login-form" autocomplete="off" autocapitalize="none" spellcheck="false">
+        <input type="text" name="fake-user-field" autocomplete="username" class="fake-field" tabindex="-1" aria-hidden="true" />
+        <input type="password" name="fake-pass-field" autocomplete="current-password" class="fake-field" tabindex="-1" aria-hidden="true" />
+
+        <label>Admin Email
+          <input id="adminEmail" name="sg_private_access_key" type="search" inputmode="email" required autocomplete="off" autocorrect="off" autocapitalize="none" data-lpignore="true" data-form-type="other" placeholder="Enter admin email here" value="" />
+        </label>
+        <label>Admin Password
+          <input id="adminPassword" name="sg_private_secret_key" type="password" required autocomplete="new-password" data-lpignore="true" data-form-type="other" placeholder="Enter password here" value="" />
+        </label>
+        <div class="captcha-box"><span id="captchaQuestion">0 + 0 = ?</span><button type="button" id="refreshCaptcha" class="small-btn edit">New</button></div>
+        <label>CAPTCHA Answer<input id="captchaAnswer" name="sg_captcha_answer" type="number" required autocomplete="off" placeholder="Answer" /></label>
+        <p id="loginMessage" class="login-message"></p>
+        <button class="btn primary" type="submit">Unlock Admin Panel</button>
+      </form>
+    </section>
+
+    <div id="adminArea" hidden>
+      <section class="admin-hero reveal">
+        <div>
+          <p class="eyebrow">Command center</p>
+          <h1>Style & Glow Admin</h1>
+          <p>Manage products, uploaded images, custom ads, Google AdSense blocks, and live homepage visibility from one clean dashboard.</p>
+        </div>
+        <div class="admin-top-actions"><a href="../index.html" class="btn ghost">View Site</a><button id="logoutBtn" class="btn danger" type="button">Logout</button></div>
+      </section>
+
+      <section class="stats-grid reveal">
+        <article class="stat-card"><span>Live Products</span><strong id="statProducts">0</strong><small>Products visible on homepage</small></article>
+        <article class="stat-card"><span>Running Ads</span><strong id="statAds">0</strong><small>Enabled ad placements</small></article>
+        <article class="stat-card"><span>Categories</span><strong id="statCategories">8</strong><small>Beauty & fashion sections</small></article>
+        <article class="stat-card"><span>Storage Mode</span><strong>Local</strong><small>Netlify-ready browser storage</small></article>
+      </section>
+
+      <section class="admin-panel reveal">
+        <div class="panel-title-row">
+          <div><p class="eyebrow">Product manager</p><h2>Add or Edit Product</h2></div>
+          <button class="small-btn edit" type="button" id="newProductBtn">+ New Product</button>
+        </div>
+        <form id="productForm" class="admin-form">
+          <input type="hidden" id="editId" />
+          <div class="form-grid">
+            <label>Product Title<input id="title" required placeholder="Elegant Rose Gold Watch" /></label>
+            <label>Category<select id="category" required></select></label>
+            <label>Rating / Reviews<input id="rating" placeholder="4.7 ★ • 1,280 reviews" /></label>
+            <label>Amazon Affiliate Link<input id="amazonLink" type="url" required placeholder="https://www.amazon.com/...tag=yourtag" /></label>
+          </div>
+          <label>Description<textarea id="description" required rows="4" placeholder="Write a short persuasive product description..."></textarea></label>
+
+          <div class="upload-grid">
+            <div class="upload-card">
+              <h3>Product Image 1</h3>
+              <label>Paste Image URL<input id="image1" placeholder="https://...jpg / png / webp" /></label>
+              <label class="file-drop">Or upload image from device<input id="imageFile1" type="file" accept="image/*" /></label>
+              <img id="preview1" class="image-preview" alt="Image 1 preview" hidden />
+            </div>
+            <div class="upload-card">
+              <h3>Product Image 2</h3>
+              <label>Paste Image URL<input id="image2" placeholder="https://...jpg / png / webp" /></label>
+              <label class="file-drop">Or upload image from device<input id="imageFile2" type="file" accept="image/*" /></label>
+              <img id="preview2" class="image-preview" alt="Image 2 preview" hidden />
+            </div>
+          </div>
+          <p class="soft-note">Tip: Uploaded images are compressed automatically before saving, so the website stays faster and smoother.</p>
+
+          <div class="form-actions"><button class="btn primary" type="submit">Save Product</button><button class="btn ghost" type="button" id="resetBtn">Reset Form</button><button class="btn danger" type="button" id="clearBtn">Clear All Products</button></div>
+        </form>
+      </section>
+
+      <section class="admin-panel reveal">
+        <div class="panel-title-row">
+          <div><p class="eyebrow">Ad manager</p><h2>Homepage / Side Ad Manager</h2></div>
+          <span class="status-pill" id="adStatusPill">Ad hidden</span>
+        </div>
+        <p class="soft-note">Use a beautiful custom banner now, or paste your Google AdSense code after approval. Google Ads / AdWords is for promoting your site; AdSense is for showing ads on your website.</p>
+        <form id="adForm" class="admin-form">
+          <div class="form-grid">
+            <label>Ad Mode<select id="adTypeInput"><option value="custom">Custom beautiful banner</option><option value="adsense">Google AdSense code block</option></select></label>
+            <label>Ad Placement<select id="adPlacementInput"><option value="featured">Featured homepage section</option><option value="side">Floating side card</option><option value="both">Both featured + side</option></select></label>
+            <label>Show Ad<select id="adEnabledInput"><option value="yes">Yes, show ad</option><option value="no">No, hide ad</option></select></label>
+            <label>Ad Button / Destination Link<input id="adLinkInput" type="url" placeholder="https://..." /></label>
+          </div>
+          <div class="form-grid">
+            <label>Ad Title<input id="adTitleInput" placeholder="Sponsored Beauty Pick" /></label>
+            <label>Ad Image URL<input id="adImageInput" placeholder="https://...jpg / png / webp" /></label>
+          </div>
+          <label class="file-drop wide">Or upload ad image from device<input id="adImageFile" type="file" accept="image/*" /></label>
+          <img id="adPreview" class="image-preview ad-preview" alt="Ad preview" hidden />
+          <label>Ad Text<textarea id="adTextInput" rows="3" placeholder="Write a short ad line..."></textarea></label>
+          <label>Google AdSense HTML Code<textarea id="adsenseCodeInput" rows="5" placeholder="Paste approved AdSense ad code here after Google approval"></textarea></label>
+          <div class="form-actions"><button class="btn primary" type="submit">Save Ad</button><button id="clearAdBtn" class="btn ghost" type="button">Clear Ad</button></div>
+        </form>
+      </section>
+
+      <section class="admin-list reveal">
+        <div class="panel-title-row"><div><p class="eyebrow">Running products</p><h2>Products Showing on Website</h2></div><input id="adminSearch" class="admin-search" type="search" placeholder="Search saved products..." /></div>
+        <div id="adminProducts"></div>
+      </section>
+    </div>
+  </main>
+  <script src="../assets/admin.js" defer></script>
+</body>
+</html>
