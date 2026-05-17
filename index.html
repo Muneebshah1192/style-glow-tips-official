@@ -4,32 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Style & Glow - women beauty and fashion affiliate finds curated from Amazon." />
-  <title>Style & Glow | Beauty & Fashion Finds</title>
+  <title>Style & Glow | Lovely Beauty & Fashion Finds</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
-<body>
-  <div class="glow-orb orb-one"></div><div class="glow-orb orb-two"></div>
-  <header class="site-header">
+<body class="home-page">
+  <div class="bg-blush bg-one"></div>
+  <div class="bg-blush bg-two"></div>
+  <div class="bg-blush bg-three"></div>
+
+  <header class="site-header luxury-header">
     <nav class="navbar">
-      <a class="brand" href="#home"><span>Style</span> & Glow</a>
+      <a class="brand brand-logo" href="#home" aria-label="Style and Glow homepage"><span>Style</span> & Glow</a>
       <button class="menu-toggle" aria-label="Open menu">☰</button>
       <div class="nav-links">
-        <a href="#products">Products</a><a href="#categories">Categories</a><a href="#ads">Featured</a><a href="#about">About</a><a href="admin/index.html" class="admin-link">Admin</a>
+        <a href="#products">Products</a>
+        <a href="#categories">Categories</a>
+        <a href="#ads">Featured</a>
+        <a href="#about">About</a>
+        <a href="admin/index.html" class="admin-link">Admin</a>
       </div>
     </nav>
   </header>
+
   <main>
-    <section id="home" class="hero reveal">
+    <section id="home" class="hero luxury-hero reveal">
       <div class="hero-content">
         <p class="eyebrow">Pinterest beauty finds • Amazon affiliate picks</p>
-        <h1>Soft, stylish, and irresistible beauty finds for women and girls.</h1>
-        <p class="hero-text">A premium shopping-style landing page for fashion, skincare, accessories, watches, bags, makeup, and daily glow essentials — designed to convert Pinterest visitors into confident product clicks.</p>
-        <div class="hero-actions"><a href="#products" class="btn primary">Explore Products</a><a href="#categories" class="btn ghost">Shop Categories</a></div>
-        <div class="trust-row"><span>✨ Feminine design</span><span>💗 Curated picks</span><span>🛍 Amazon affiliate links</span></div>
+        <h1>Lovely beauty & fashion finds for your soft glow era.</h1>
+        <p class="hero-text">Explore elegant handbags, skincare, makeup, watches, accessories, and feminine fashion picks selected to make every Pinterest visitor stop, scroll, and click with confidence.</p>
+        <div class="hero-actions">
+          <a href="#products" class="btn primary">Explore Products</a>
+          <a href="#categories" class="btn ghost">Shop Categories</a>
+        </div>
+        <div class="trust-row">
+          <span>✨ Boutique layout</span>
+          <span>💗 Girls & women focused</span>
+          <span>🛍 Amazon affiliate ready</span>
+        </div>
       </div>
-      <div class="hero-showcase floaty">
+
+      <div class="hero-showcase floaty luxury-showcase">
         <div class="hero-image"></div>
-        <div class="hero-badge"><strong>Trending Glow Picks</strong><p>Beauty • fashion • bags • skincare</p></div>
+        <div class="hero-badge">
+          <strong>Trending Glow Picks</strong>
+          <p>Beauty • fashion • bags • skincare</p>
+        </div>
       </div>
     </section>
 
@@ -40,27 +60,66 @@
     </section>
 
     <section id="ads" class="ad-zone reveal" hidden>
-      <div class="ad-copy"><p class="eyebrow">Featured spotlight</p><h2 id="adTitle">Sponsored Beauty Pick</h2><p id="adText">Your featured ad or Google AdSense area will appear here beautifully.</p><a id="adLink" class="btn ghost" href="#" target="_blank" rel="nofollow sponsored noopener">View Offer</a></div>
+      <div class="ad-copy">
+        <p class="eyebrow">Featured spotlight</p>
+        <h2 id="adTitle">Sponsored Beauty Pick</h2>
+        <p id="adText">Your featured ad or Google AdSense area will appear here beautifully.</p>
+        <a id="adLink" class="btn ghost" href="#" target="_blank" rel="nofollow sponsored noopener">View Offer</a>
+      </div>
       <div class="ad-media"><img id="adImage" alt="Featured promotion" loading="lazy"></div>
     </section>
 
     <section id="categories" class="section reveal">
-      <div class="section-head"><p class="eyebrow">Shop by mood</p><h2>Beauty-first categories</h2></div>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Shop by mood</p>
+          <h2>Beauty-first categories</h2>
+        </div>
+      </div>
       <div class="category-grid" id="categoryGrid"></div>
     </section>
 
-    <section id="products" class="section reveal">
-      <div class="section-head product-head"><div><p class="eyebrow">Curated products</p><h2>Latest affiliate finds</h2></div><div class="filters"><input type="search" id="searchInput" placeholder="Search product..." /><select id="categoryFilter"><option value="all">All categories</option></select></div></div>
+    <section id="products" class="section reveal products-section">
+      <div class="section-head product-head">
+        <div>
+          <p class="eyebrow">Curated products</p>
+          <h2>Latest affiliate finds</h2>
+        </div>
+        <div class="filters">
+          <input type="search" id="searchInput" placeholder="Search product..." autocomplete="off" />
+          <select id="categoryFilter"><option value="all">All categories</option></select>
+        </div>
+      </div>
       <div class="product-grid" id="productGrid"></div>
-      <div class="empty-state" id="emptyState" hidden><h3>No products found</h3><p>Add products from the admin panel or try another search.</p></div>
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>No products found</h3>
+        <p>Add products from the admin panel or try another search.</p>
+      </div>
     </section>
 
     <section id="about" class="about reveal">
-      <div><p class="eyebrow">Conversion focused</p><h2>Built to make Pinterest visitors stay, scroll, and click.</h2></div>
-      <div class="about-cards"><article><h3>Fast Loading</h3><p>Optimized scripts, lazy images, and lightweight styling reduce lag and improve response.</p></article><article><h3>Premium Feel</h3><p>Soft rose gradients, glass cards, micro-animations, and feminine product layouts feel boutique-level.</p></article><article><h3>Easy Updates</h3><p>Add products and homepage ads from the admin panel without editing code.</p></article></div>
+      <div>
+        <p class="eyebrow">Conversion focused</p>
+        <h2>Built to make Pinterest visitors stay, scroll, and click.</h2>
+      </div>
+      <div class="about-cards">
+        <article><h3>Fast Loading</h3><p>Optimized scripts, lazy images, and lightweight styling reduce lag and improve response.</p></article>
+        <article><h3>Premium Feel</h3><p>Soft rose gradients, glass cards, micro-animations, and feminine product layouts feel boutique-level.</p></article>
+        <article><h3>Easy Updates</h3><p>Add products and homepage ads from the admin panel without editing code.</p></article>
+      </div>
     </section>
   </main>
-  <footer class="footer"><div><h3>Style & Glow</h3><p>Pinterest: Style & Glow — Style & Glow Tips Official</p><p>Contact: 0314-0895219</p><p class="disclaimer">As an Amazon Associate, this website may earn from qualifying purchases.</p></div><p>Developed by Muneeb Haider</p></footer>
+
+  <footer class="footer">
+    <div>
+      <h3>Style & Glow</h3>
+      <p>Pinterest: Style & Glow — Style & Glow Tips Official</p>
+      <p>Contact: 0314-08995219</p>
+      <p class="disclaimer">As an Amazon Associate, this website may earn from qualifying purchases.</p>
+    </div>
+    <p>Developed by Muneeb Haider</p>
+  </footer>
+
   <script src="assets/app.js" defer></script>
 </body>
 </html>
