@@ -7,7 +7,6 @@ const categories=['Girls Beauty','Girls Fashion','Women Beauty','Women Fashion',
 const $=s=>document.querySelector(s);
 let captchaValue=0;
 let uploadCache={image1:'',image2:'',image3:'',image4:'',adImage:''};
-
 function safe(v=''){return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
 async function sha256(text){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('')}
 function newCaptcha(){const a=Math.floor(Math.random()*8)+2,b=Math.floor(Math.random()*8)+2;captchaValue=a+b;$('#captchaQuestion').textContent=`${a} + ${b} = ?`;$('#captchaAnswer').value=''}
@@ -18,141 +17,18 @@ function getProducts(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||
 function saveProducts(products){localStorage.setItem(STORAGE_KEY,JSON.stringify(products));updateStats();}
 function getAd(){try{return JSON.parse(localStorage.getItem(AD_KEY)||'{}')}catch{return{}}}
 function defaultImg(){return 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=700&q=70'}
-
-function resizeImage(file,maxSize=1000,quality=.78){
-  return new Promise((resolve,reject)=>{
-    if(!file){resolve('');return}
-    const reader=new FileReader();
-    reader.onerror=()=>reject(new Error('Image could not be read.'));
-    reader.onload=()=>{
-      const img=new Image();
-      img.onerror=()=>reject(new Error('Image preview failed.'));
-      img.onload=()=>{
-        const scale=Math.min(1,maxSize/Math.max(img.width,img.height));
-        const canvas=document.createElement('canvas');
-        canvas.width=Math.max(1,Math.round(img.width*scale));
-        canvas.height=Math.max(1,Math.round(img.height*scale));
-        const ctx=canvas.getContext('2d');
-        ctx.drawImage(img,0,0,canvas.width,canvas.height);
-        resolve(canvas.toDataURL('image/jpeg',quality));
-      };
-      img.src=reader.result;
-    };
-    reader.readAsDataURL(file);
-  })
-}
+function resizeImage(file,maxSize=1100,quality=.78){return new Promise((resolve,reject)=>{if(!file){resolve('');return}const reader=new FileReader();reader.onerror=()=>reject(new Error('Image could not be read.'));reader.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('Image preview failed.'));img.onload=()=>{const scale=Math.min(1,maxSize/Math.max(img.width,img.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',quality));};img.src=reader.result;};reader.readAsDataURL(file);})}
 function setPreview(id,src){const img=$('#'+id);if(!img)return;if(src){img.src=src;img.hidden=false}else{img.removeAttribute('src');img.hidden=true}}
-async function handleUpload(inputId,cacheKey,previewId){
-  const file=$('#'+inputId)?.files?.[0];
-  if(!file)return;
-  try{uploadCache[cacheKey]=await resizeImage(file);setPreview(previewId,uploadCache[cacheKey]);}
-  catch(err){alert(err.message||'Image upload failed.')}
-}
-
-function updateStats(){
-  const products=getProducts();
-  const ad=getAd();
-  $('#statProducts') && ($('#statProducts').textContent=products.length);
-  $('#statAds') && ($('#statAds').textContent=ad.enabled==='yes'?1:0);
-  const pill=$('#adStatusPill');
-  if(pill){pill.textContent=ad.enabled==='yes'?'Ad running':'Ad hidden';pill.classList.toggle('live',ad.enabled==='yes')}
-}
-function renderAdmin(){
-  const box=$('#adminProducts');if(!box)return;
-  const q=($('#adminSearch')?.value||'').toLowerCase();
-  const products=getProducts().filter(p=>`${p.title} ${p.category} ${p.description}`.toLowerCase().includes(q));
-  box.innerHTML=products.length?products.map(p=>`<div class="admin-item"><img src="${safe(p.image1||defaultImg())}" alt="${safe(p.title)}"><div><strong>${safe(p.title)}</strong><p>${safe(p.category)} • ${safe(p.rating||'No rating')}</p><small>${safe((p.description||'').slice(0,110))}${(p.description||'').length>110?'...':''}</small></div><div class="admin-actions"><button class="small-btn edit" onclick="editProduct('${safe(p.id)}')">Edit</button><button class="small-btn delete" onclick="deleteProduct('${safe(p.id)}')">Delete</button></div></div>`).join(''):'<p>No saved products yet. Add your first product above.</p>';
-  updateStats();
-}
-function resetForm(){
-  $('#productForm')?.reset();$('#editId').value='';uploadCache.image1='';uploadCache.image2='';uploadCache.image3='';uploadCache.image4='';setPreview('preview1','');setPreview('preview2','');setPreview('preview3','');setPreview('preview4','');
-}
-function editProduct(id){
-  const p=getProducts().find(x=>x.id===id);if(!p)return;
-  ['title','category','rating','amazonLink','description'].forEach(k=>$('#'+k).value=p[k]||'');
-  ['image1','image2','image3','image4'].forEach(k=>{if($('#'+k)) $('#'+k).value=(p[k]||'').startsWith('data:')?'':(p[k]||'')});
-  uploadCache.image1=p.image1||'';uploadCache.image2=p.image2||'';uploadCache.image3=p.image3||'';uploadCache.image4=p.image4||'';
-  setPreview('preview1',p.image1||'');setPreview('preview2',p.image2||'');setPreview('preview3',p.image3||'');setPreview('preview4',p.image4||'');
-  $('#editId').value=p.id;window.scrollTo({top:0,behavior:'smooth'});
-}
+async function handleUpload(inputId,cacheKey,previewId){const file=$('#'+inputId)?.files?.[0];if(!file)return;try{uploadCache[cacheKey]=await resizeImage(file);setPreview(previewId,uploadCache[cacheKey]);}catch(err){alert(err.message||'Image upload failed.')}}
+function updateStats(){const products=getProducts();const ad=getAd();$('#statProducts')&&($('#statProducts').textContent=products.length);$('#statAds')&&($('#statAds').textContent=ad.enabled==='yes'?1:0);const pill=$('#adStatusPill');if(pill){pill.textContent=ad.enabled==='yes'?'Ad running':'Ad hidden';pill.classList.toggle('live',ad.enabled==='yes')}}
+function renderAdmin(){const box=$('#adminProducts');if(!box)return;const q=($('#adminSearch')?.value||'').toLowerCase();const products=getProducts().filter(p=>`${p.title} ${p.category} ${p.description}`.toLowerCase().includes(q));box.innerHTML=products.length?products.map(p=>`<div class="admin-item"><img src="${safe(p.image1||defaultImg())}" alt="${safe(p.title)}"><div><strong>${safe(p.title)}</strong><p>${safe(p.category)} • ⭐ ${safe(p.rating||'4.7')} (${safe(p.reviews||'0')}) • PKR ${safe(p.newPrice||'-')}</p><small>${safe((p.description||'').slice(0,110))}${(p.description||'').length>110?'...':''}</small></div><div class="admin-actions"><button class="small-btn edit" onclick="editProduct('${safe(p.id)}')">Edit</button><button class="small-btn delete" onclick="deleteProduct('${safe(p.id)}')">Delete</button></div></div>`).join(''):'<p>No saved products yet. Add your first product above.</p>';updateStats();}
+function resetForm(){ $('#productForm')?.reset();$('#editId').value='';['image1','image2','image3','image4'].forEach(k=>uploadCache[k]='');['preview1','preview2','preview3','preview4'].forEach(id=>setPreview(id,''));}
+const fields=['title','category','rating','reviews','oldPrice','newPrice','discount','badge','bought','delivery','amazonLink','description'];
+function editProduct(id){const p=getProducts().find(x=>x.id===id);if(!p)return;fields.forEach(k=>{if($('#'+k))$('#'+k).value=p[k]||''});['image1','image2','image3','image4'].forEach(k=>{if($('#'+k))$('#'+k).value=(p[k]||'').startsWith('data:')?'':(p[k]||'')});uploadCache.image1=p.image1||'';uploadCache.image2=p.image2||'';uploadCache.image3=p.image3||'';uploadCache.image4=p.image4||'';setPreview('preview1',p.image1||'');setPreview('preview2',p.image2||'');setPreview('preview3',p.image3||'');setPreview('preview4',p.image4||'');$('#editId').value=p.id;window.scrollTo({top:0,behavior:'smooth'});}
 function deleteProduct(id){if(confirm('Delete this product?')){saveProducts(getProducts().filter(p=>p.id!==id));renderAdmin();}}
 function clearAll(){if(confirm('Delete all saved products?')){localStorage.removeItem(STORAGE_KEY);renderAdmin()}}
-
-function loadAdForm(){
-  const ad=getAd();
-  $('#adTypeInput').value=ad.type||'custom';
-  $('#adPlacementInput').value=ad.placement||'featured';
-  $('#adTitleInput').value=ad.title||'';
-  $('#adTextInput').value=ad.text||'';
-  $('#adImageInput').value=(ad.image||'').startsWith('data:')?'':(ad.image||'');
-  $('#adLinkInput').value=ad.link||'';
-  $('#adEnabledInput').value=ad.enabled||'no';
-  $('#adsenseCodeInput').value=ad.adsenseCode||'';
-  uploadCache.adImage=ad.image||'';
-  setPreview('adPreview',ad.image||'');
-  updateStats();
-}
-function saveAd(e){
-  e.preventDefault();
-  const ad={
-    type:$('#adTypeInput').value,
-    placement:$('#adPlacementInput').value,
-    title:$('#adTitleInput').value.trim(),
-    text:$('#adTextInput').value.trim(),
-    image:uploadCache.adImage||$('#adImageInput').value.trim(),
-    link:$('#adLinkInput').value.trim(),
-    enabled:$('#adEnabledInput').value,
-    adsenseCode:$('#adsenseCodeInput').value.trim()
-  };
-  localStorage.setItem(AD_KEY,JSON.stringify(ad));
-  loadAdForm();
-  alert('Ad settings saved successfully!');
-}
-function initAdminArea(){
-  if($('#category') && $('#category').children.length===0)categories.forEach(c=>$('#category').insertAdjacentHTML('beforeend',`<option>${safe(c)}</option>`));
-  renderAdmin();loadAdForm();updateStats();document.querySelectorAll('.reveal').forEach(el=>el.classList.add('active'));
-}
-
+function loadAdForm(){const ad=getAd();$('#adTypeInput').value=ad.type||'custom';$('#adPlacementInput').value=ad.placement||'featured';$('#adTitleInput').value=ad.title||'';$('#adTextInput').value=ad.text||'';$('#adImageInput').value=(ad.image||'').startsWith('data:')?'':(ad.image||'');$('#adLinkInput').value=ad.link||'';$('#adEnabledInput').value=ad.enabled||'no';$('#adsenseCodeInput').value=ad.adsenseCode||'';uploadCache.adImage=ad.image||'';setPreview('adPreview',ad.image||'');updateStats();}
+function saveAd(e){e.preventDefault();const ad={type:$('#adTypeInput').value,placement:$('#adPlacementInput').value,title:$('#adTitleInput').value.trim(),text:$('#adTextInput').value.trim(),image:uploadCache.adImage||$('#adImageInput').value.trim(),link:$('#adLinkInput').value.trim(),enabled:$('#adEnabledInput').value,adsenseCode:$('#adsenseCodeInput').value.trim()};localStorage.setItem(AD_KEY,JSON.stringify(ad));loadAdForm();alert('Ad settings saved successfully!');}
+function initAdminArea(){if($('#category')&&$('#category').children.length===0)categories.forEach(c=>$('#category').insertAdjacentHTML('beforeend',`<option>${safe(c)}</option>`));renderAdmin();loadAdForm();updateStats();document.querySelectorAll('.reveal').forEach(el=>el.classList.add('active'));}
 window.editProduct=editProduct;window.deleteProduct=deleteProduct;
-
-document.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.reveal').forEach(el=>el.classList.add('active'));
-  clearLoginFields();setTimeout(clearLoginFields,60);setTimeout(clearLoginFields,350);newCaptcha();
-  if(isLogged())showAdmin();
-
-  $('#refreshCaptcha')?.addEventListener('click',newCaptcha);
-  $('#loginForm')?.addEventListener('submit',async e=>{
-    e.preventDefault();
-    const email=$('#adminEmail').value.trim().toLowerCase();const pass=$('#adminPassword').value;const ans=Number($('#captchaAnswer').value);const msg=$('#loginMessage');
-    if(!ALLOWED_EMAIL_HASHES.includes(await sha256(email))){msg.textContent='Wrong admin email. Please enter the correct private admin email.';clearLoginFields();newCaptcha();return}
-    if(ans!==captchaValue){msg.textContent='CAPTCHA answer is incorrect.';$('#captchaAnswer').value='';newCaptcha();return}
-    if(await sha256(pass)!==PASS_HASH){msg.textContent='Wrong admin password.';$('#adminPassword').value='';newCaptcha();return}
-    sessionStorage.setItem(SESSION_KEY,'ok');clearLoginFields();showAdmin();
-  });
-
-  $('#logoutBtn')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
-  $('#newProductBtn')?.addEventListener('click',resetForm);
-  $('#resetBtn')?.addEventListener('click',resetForm);
-  $('#clearBtn')?.addEventListener('click',clearAll);
-  $('#adminSearch')?.addEventListener('input',renderAdmin);
-  $('#imageFile1')?.addEventListener('change',()=>handleUpload('imageFile1','image1','preview1'));
-  $('#imageFile2')?.addEventListener('change',()=>handleUpload('imageFile2','image2','preview2'));
-  $('#imageFile3')?.addEventListener('change',()=>handleUpload('imageFile3','image3','preview3'));
-  $('#imageFile4')?.addEventListener('change',()=>handleUpload('imageFile4','image4','preview4'));
-  $('#adImageFile')?.addEventListener('change',()=>handleUpload('adImageFile','adImage','adPreview'));
-  $('#image1')?.addEventListener('input',()=>{uploadCache.image1='';setPreview('preview1',$('#image1').value.trim())});
-  $('#image2')?.addEventListener('input',()=>{uploadCache.image2='';setPreview('preview2',$('#image2').value.trim())});
-  $('#image3')?.addEventListener('input',()=>{uploadCache.image3='';setPreview('preview3',$('#image3').value.trim())});
-  $('#image4')?.addEventListener('input',()=>{uploadCache.image4='';setPreview('preview4',$('#image4').value.trim())});
-  $('#adImageInput')?.addEventListener('input',()=>{uploadCache.adImage='';setPreview('adPreview',$('#adImageInput').value.trim())});
-
-  $('#productForm')?.addEventListener('submit',e=>{
-    e.preventDefault();
-    const id=$('#editId').value||(crypto.randomUUID?crypto.randomUUID():String(Date.now()));
-    const product={id,title:$('#title').value.trim(),category:$('#category').value,rating:$('#rating').value.trim(),amazonLink:$('#amazonLink').value.trim(),description:$('#description').value.trim(),image1:uploadCache.image1||$('#image1').value.trim(),image2:uploadCache.image2||$('#image2').value.trim(),image3:uploadCache.image3||($('#image3')?.value.trim()||''),image4:uploadCache.image4||($('#image4')?.value.trim()||'')};
-    const products=getProducts();const index=products.findIndex(p=>p.id===id);index>=0?products[index]=product:products.unshift(product);
-    saveProducts(products);resetForm();renderAdmin();alert('Product saved successfully!');
-  });
-  $('#adForm')?.addEventListener('submit',saveAd);
-  $('#clearAdBtn')?.addEventListener('click',()=>{if(confirm('Clear current ad settings?')){localStorage.removeItem(AD_KEY);loadAdForm();alert('Ad cleared.')}});
-});
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('active'));clearLoginFields();setTimeout(clearLoginFields,60);setTimeout(clearLoginFields,350);newCaptcha();if(isLogged())showAdmin();$('#refreshCaptcha')?.addEventListener('click',newCaptcha);$('#loginForm')?.addEventListener('submit',async e=>{e.preventDefault();const email=$('#adminEmail').value.trim().toLowerCase();const pass=$('#adminPassword').value;const ans=Number($('#captchaAnswer').value);const msg=$('#loginMessage');if(!ALLOWED_EMAIL_HASHES.includes(await sha256(email))){msg.textContent='Wrong private access email.';clearLoginFields();newCaptcha();return}if(ans!==captchaValue){msg.textContent='CAPTCHA answer is incorrect.';$('#captchaAnswer').value='';newCaptcha();return}if(await sha256(pass)!==PASS_HASH){msg.textContent='Wrong admin password.';$('#adminPassword').value='';newCaptcha();return}sessionStorage.setItem(SESSION_KEY,'ok');clearLoginFields();showAdmin();});$('#logoutBtn')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});$('#newProductBtn')?.addEventListener('click',resetForm);$('#resetBtn')?.addEventListener('click',resetForm);$('#clearBtn')?.addEventListener('click',clearAll);$('#adminSearch')?.addEventListener('input',renderAdmin);['1','2','3','4'].forEach(n=>{$('#imageFile'+n)?.addEventListener('change',()=>handleUpload('imageFile'+n,'image'+n,'preview'+n));$('#image'+n)?.addEventListener('input',()=>{uploadCache['image'+n]='';setPreview('preview'+n,$('#image'+n).value.trim())});});$('#adImageFile')?.addEventListener('change',()=>handleUpload('adImageFile','adImage','adPreview'));$('#adImageInput')?.addEventListener('input',()=>{uploadCache.adImage='';setPreview('adPreview',$('#adImageInput').value.trim())});$('#productForm')?.addEventListener('submit',e=>{e.preventDefault();const id=$('#editId').value||(crypto.randomUUID?crypto.randomUUID():String(Date.now()));const product={id};fields.forEach(k=>{if($('#'+k)) product[k]=$('#'+k).value.trim();});['image1','image2','image3','image4'].forEach(k=>{product[k]=uploadCache[k]||($('#'+k)?.value.trim()||'')});const products=getProducts();const index=products.findIndex(p=>p.id===id);index>=0?products[index]=product:products.unshift(product);saveProducts(products);resetForm();renderAdmin();alert('Product saved successfully!');});$('#adForm')?.addEventListener('submit',saveAd);$('#clearAdBtn')?.addEventListener('click',()=>{if(confirm('Clear current ad settings?')){localStorage.removeItem(AD_KEY);loadAdForm();alert('Ad cleared.')}});});

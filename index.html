@@ -90,7 +90,17 @@
           <select id="categoryFilter"><option value="all">All categories</option></select>
         </div>
       </div>
-      <div class="product-grid" id="productGrid"></div>
+      <div class="shop-layout">
+        <aside class="shop-sidebar">
+          <h3>Categories</h3>
+          <button class="side-cat" data-cat="all" type="button">All Products</button>
+          <div id="sideCategoryList"></div>
+        </aside>
+        <div>
+          <p class="results-note" id="resultsNote">Showing curated affiliate results</p>
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+      </div>
       <div class="empty-state" id="emptyState" hidden>
         <h3>No products found</h3>
         <p>Add products from the admin panel or try another search.</p>
